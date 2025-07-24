@@ -53,7 +53,10 @@ def bollinger_band_strategy(df):
 if pair:
     df = get_data(pair)
     if df is not None:
-        st.line_chart(df.set_index("time")[["close", "upper", "lower"]])
+        if not df.empty and all(col in df.columns for col in ["close", "upper", "lower"]):
+    st.line_chart(df.set_index("time")[["close", "upper", "lower"]])
+else:
+    st.warning("Data missing or columns not found: 'close', 'upper', 'lower'")
         signal = bollinger_band_strategy(df)
         if signal:
             st.success(signal)
